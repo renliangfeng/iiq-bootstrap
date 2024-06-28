@@ -2,3 +2,4 @@
 volume/sp-log/*
 volume/app/*
 volume/mysql/mysql-data/*
+iiq_app/iiq-app/*

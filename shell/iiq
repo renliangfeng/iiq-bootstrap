@@ -1,0 +1,89 @@
+#!/bin/sh
+#
+# (c) Copyright 2008 SailPoint Technologies, Inc., All Rights Reserved.
+#
+# Run the SailPoint IdentityIQ application launcher.
+#
+# The script will try to find the IdentityIQ installation directory
+# automatically by looking relative to the location of this script.  If
+# the SPHOME environment variable is set, then it's value will be used
+# instead.
+#
+# A supported Java runtime must be in the PATH.
+# The sun.lang.ClassLoader.allowArraySyntax option is necessary 
+# if you want to use JDK 1.6.
+#
+
+JAVA_OPTS="-Xms512m -Xmx2048m -Dsun.lang.ClassLoader.allowArraySyntax=true -Djava.awt.headless=true -Dcom.ibm.jsse2.overrideDefaultTLS=true"
+  #
+  # try to determine if we should add exports to java command line for java 17+
+  #
+JAVA_OPT_ADD_EXPORTS="--add-exports=java.naming/com.sun.jndi.ldap=ALL-UNNAMED"
+
+  #
+  # Java version has the version info on the first line.  The actual version is in double quotes.
+  #   head - just look at the first line
+  #   cut  - split on double quotes, look at field 2 (the stuff inside the quotes)
+  #   sed  - (first one) if it's an old version it will start with 1. (e.g. 1.4), but now they start with
+  #          bigger numbers (e.g. 11.0.8).  We will just remove the leading "1." if it exists
+  #   sed  - (second one) remove the first period and everything after leaving the major version
+  #
+JAVA_MAJOR_VERSION=`java -version 2>&1 | head -1 | cut -f 2 -d"\"" | sed "s/^1\.//" | sed "s/\..*//"`
+
+if [ "$JAVA_MAJOR_VERSION" -ge "17" ] ; then 
+  echo adding exports for Java 17
+  export JAVA_OPTS="${JAVA_OPTS} ${JAVA_OPT_ADD_EXPORTS}"
+fi
+
+  #
+  # try to find SPHOME if it is not set
+  #
+if [ -z "$SPHOME" ]; then
+  for dir in "`dirname $0`/../.." . .. "`dirname $0`/../../build"; do
+    if [ -f "$dir/WEB-INF/lib/identityiq.jar" -o \
+         -f "$dir/WEB-INF/classes/sailpoint/launch/Launcher.class" ]; then
+      SPHOME="$dir"
+      break
+    fi
+  done
+fi
+
+if [ -z "$SPHOME" ]; then
+  echo "SPHOME is not set and unable to determine the correct value." >&2
+  exit 1
+fi
+
+  #
+  # parse any command line arguments specific to this script
+  #
+DEBUG=""
+if [ "$1" = "-d" ]; then
+  DEBUG="-d"
+  shift
+fi
+
+  #
+  # Set a bootstrap CLASSPATH.  A special classloader will be used to
+  # add the rest of our CLASSPATH.
+  #
+fileSep=":"
+case "`uname`" in
+  CYGWIN*)
+      fileSep=";"
+      SPHOME=`cygpath -w "$SPHOME"`
+      ;;
+esac
+
+if [ -n "$CLASSPATH" ]; then
+  CLASSPATH="${CLASSPATH}${fileSep}"
+fi
+CLASSPATH="${CLASSPATH}${SPHOME}/WEB-INF/classes"
+CLASSPATH="${CLASSPATH}${fileSep}${SPHOME}/WEB-INF/lib/identityiq.jar"
+export CLASSPATH
+
+LAUNCHER_OPTS=-DbootstrapFirst=true
+
+COMMAND_LINE="java $JAVA_OPTS $LAUNCHER_OPTS sailpoint.launch.Launcher $DEBUG"
+
+[ -n "$DEBUG" ] && echo $COMMAND_LINE "$@" >&2
+$COMMAND_LINE "$@"

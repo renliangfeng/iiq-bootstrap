@@ -1,0 +1,39 @@
+services:
+  iiq-app:
+    image: iiq-app
+    build: 
+      context: ./iiq_app
+      args:
+        - SSB_APP_FOLDER=$ssb_app_folder
+        - SPTARGET=$sp_target
+        - FULL_TEXT_INDEX_PATH=/mnt/iiq-fulltext-index
+        - UPLOAD_FILE_PATH=/mnt/file-upload
+    container_name: iiq-app
+    ports:
+      - 8080:8080
+      - 8443:8443
+    environment:
+      - CATALINA_OPTS=-Xmx1024m -Xms256m
+      - TZ=Australia/Sydney
+    depends_on:
+      - iiq-db
+    volumes:
+      - "./volume/sp-log:/usr/local/tomcat/logs"
+      - "./volume/keystore/local:/usr/local/keystore"
+      - "./volume/iiq-properties/local/iiq.properties:/usr/local/tomcat/webapps/identityiq/WEB-INF/classes/iiq.properties"
+      - "./volume/iiq-properties/local/log4j2.properties:/usr/local/tomcat/webapps/identityiq/WEB-INF/classes/log4j2.properties"
+
+  iiq-db:
+    container_name: iiq-db
+    image: mysql:8.0
+    command: mysqld --default-authentication-plugin=mysql_native_password --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    restart: always
+    ports:
+      - 3307:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: Sailpoint@1234
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+    volumes:
+      - ./volume/mysql/mysql-data:/var/lib/mysql
+
+    

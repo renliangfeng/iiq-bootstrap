@@ -35,6 +35,8 @@ services:
       MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
     volumes:
       - ./volume/mysql/mysql-data:/var/lib/mysql
+      # following is only needed for Windows OS
+      #- ./volume/mysql/my.cnf:/etc/my.cnf
 
 
     

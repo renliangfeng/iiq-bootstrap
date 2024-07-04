@@ -1,8 +1,21 @@
 #!/bin/sh
 
-echo "IIQ Database type is $1. If this argument is not specified, MySQL is used. 'mssql' is the only valid value for SQL Server. Any other values are default to MySQL."
+echo "Checking current running DB container. "
+mysqlContainer="$(docker ps --format '{{ .Names }}' | grep iiq-db)"
+mssqlContainer="$(docker ps --format '{{ .Names }}' | grep iiq-mssql-db)"
+if [[ $mysqlContainer = 'iiq-db' ]];then
+	echo "Running DB is MySQL. "
+	dbType=mysql
+elif [[ "$mssqlContainer" == "iiq-mssql-db" ]]; then
+	echo "Running DB is SQL Server. "
+	dbType=mssql
+else
+	echo "No Running DB (MySQL or SQL Server). Exit "
+	exit
+fi
 
-echo "Please specify password of MySQL root user. Leave it empty and press Enter to continue with the default password 'Sailpoint@1234'. "
+
+echo "Please specify password of Database Server root user. Leave it empty and press Enter to continue with the default password 'Sailpoint@1234'. "
 read rootPassword
 
 # echo "root password: $rootPassword"
@@ -17,7 +30,7 @@ echo "root password: $rootPassword"
 docker exec --workdir /usr/local/tomcat/webapps/identityiq/WEB-INF/bin iiq-app ./iiq schema
 
 # download IIQ DB Script from IIQ App container
-if [[ $1 = 'mssql' ]];then
+if [[ $dbType = 'mssql' ]];then
 	docker cp iiq-app:/usr/local/tomcat/webapps/identityiq/WEB-INF/database/create_identityiq_tables.sqlserver .
 	sed -i '' "s/WITH PASSWORD='identityiq'/WITH PASSWORD='identityiq',CHECK_POLICY = OFF/g" ./create_identityiq_tables.sqlserver
 	sed -i '' "s/WITH PASSWORD='identityiqPlugin'/WITH PASSWORD='identityiqPlugin',CHECK_POLICY = OFF/g" ./create_identityiq_tables.sqlserver
@@ -29,7 +42,7 @@ fi
 
 read continue
 
-if [[ $1 = 'mssql' ]];then
+if [[ $dbType = 'mssql' ]];then
 	# upload IIQ DB script to IIQ DB container
 	docker cp ./create_identityiq_tables.sqlserver iiq-mssql-db:/tmp/
 
@@ -74,7 +87,7 @@ docker exec -it iiq-app bash -c "/tmp/init-iiq.sh"
 echo "Deleting downloaded files: sp.init-custom.xml and create_identityiq_tables.mysql"
 rm ./sp.init-custom.xml
 
-if [[ $1 = 'mssql' ]];then
+if [[ $dbType = 'mssql' ]];then
 	rm ./create_identityiq_tables.sqlserver
 else
 	rm ./create_identityiq_tables.mysql

@@ -10,6 +10,11 @@ docker exec --workdir /usr/local/tomcat/webapps/identityiq/WEB-INF/bin iiq-app .
 
 @REM download IIQ DB Script from IIQ App container
 docker cp iiq-app:/usr/local/tomcat/webapps/identityiq/WEB-INF/database/create_identityiq_tables.sqlserver .
+
+@REM update ddl script to add 'CHECK_POLICY = OFF' to login creation, this is to prevent error when executing script
+powershell -Command "(gc create_identityiq_tables.sqlserver) -replace \"WITH PASSWORD='identityiq'\", \"WITH PASSWORD='identityiq',CHECK_POLICY = OFF\" | Out-File -encoding ASCII create_identityiq_tables.sqlserver"
+powershell -Command "(gc create_identityiq_tables.sqlserver) -replace \"WITH PASSWORD='identityiqPlugin'\", \"WITH PASSWORD='identityiqPlugin',CHECK_POLICY = OFF\" | Out-File -encoding ASCII create_identityiq_tables.sqlserver"
+
 set /p continue=By default IIQ database name is 'identityiq'. But you can modify %cd%/create_identityiq_tables.sqlserver to override values before pressing Enter to continue.
 
 @REM upload IIQ DB script to IIQ DB container

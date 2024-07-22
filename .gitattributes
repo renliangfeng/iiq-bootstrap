@@ -1,0 +1,4 @@
+shell/create-iiq-db-mssql.sh text eol=crlf
+shell/create-iiq-db.sh text eol=crlf
+shell/init-iiq.sh text eol=crlf
+shell/iiq text eol=crlf

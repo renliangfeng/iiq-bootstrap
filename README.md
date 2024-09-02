@@ -10,6 +10,14 @@ Run command from *iiq-bootstrap* directory:
 
 `ssb_app_folder=[[appFolder]] sp_target=[[envValue]] docker compose up`
 
+Notes: To run SQL Server as IIQ Database, update **.env** file to add line:
+
+`COMPOSE_FILE=mssql-compose.yaml`
+
+Or add it to the front of 'docker compose up' command as below:
+
+`COMPOSE_FILE=mssql-compose.yaml ssb_app_folder=[[appFolder]] sp_target=[[envValue]] docker compose up`
+
 ## step 3: install and initialize database
 Run command from *iiq-bootstrap* directory:
 ### Mac (Linux) OS

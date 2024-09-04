@@ -36,3 +36,16 @@ Run commands from *iiq-bootstrap* directory:
 `docker compose down`
 
 `docker compose up`
+
+## Reset from scratch
+Installing IIQ is usually an one-off effort. However if you need to start over again for any reasons, you need to perform the following clean-up steps first.
+
+- Clean up Database data. Delete all files under the following folder according to the type of Database (MySQL or SQL Server) used by IIQ.
+	
+	- **MySQL**: iiq-bootstrap/volume/mysql/mysql-data 
+	- **SQL Server**: iiq-bootstrap/volume/mssql/data
+
+- Delete both Container instances (iiq-app and iiq-db) from Docker Desktop.
+- If you switch to a different IIQ application, delete **iiq-app** image from Docker Desktop.
+- Try to delete all Volumes from Docker Desktop if you encounter any issues.
+- Now follow the previous steps to install IIQ.

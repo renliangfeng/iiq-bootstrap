@@ -45,7 +45,7 @@ Installing IIQ is usually an one-off effort. However if you need to start over a
 	- **MySQL**: iiq-bootstrap/volume/mysql/mysql-data 
 	- **SQL Server**: iiq-bootstrap/volume/mssql/data
 
-- Delete Container instances group **iiq-bootstrap** from Docker Desktop. This will delete both Container instaces under group **iiq-bootstrap**.
+- Delete Container instances group **iiq-bootstrap** from Docker Desktop. This will delete both Container instances under group **iiq-bootstrap**.
 - If you switch to a different IIQ application, delete **iiq-app** image from Docker Desktop.
 - Try to delete all Volumes from Docker Desktop if you encounter any issues.
 - Now follow the previous steps to install IIQ.

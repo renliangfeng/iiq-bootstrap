@@ -31,6 +31,7 @@ Run command from *iiq-bootstrap* directory:
 ***Additional Notes:*** 
 - *Unlike Window Batch, there is only one Shell script for Mac or Linux as it automatically detects the type (MySQL or SQL Server) of running Database for IIQ.*
 - *By default, it will install LCM and RapidSetup XML Objects. If you want to skip them, you need to modify the following shell script to remove the section related to LCM or RapidSetup XML import*:
+  
 		iiq-bootstrap/shell/init-iiq.sh
 
 ## step 4: restart docker compose

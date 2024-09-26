@@ -48,6 +48,8 @@ if [[ $dbType = 'mssql' ]];then
 
 	# upload shell script to IIQ DB container
 	docker cp ./shell/create-iiq-db-mssql.sh iiq-mssql-db:/tmp/
+	docker exec -u 0 -it iiq-mssql-db chown root:root /tmp/create-iiq-db-mssql.sh
+	docker exec -u 0 -it iiq-mssql-db bash -c "sed -i -e 's/\r$//' /tmp/create-iiq-db-mssql.sh"
 	docker exec --workdir /tmp iiq-mssql-db chmod 755 create-iiq-db-mssql.sh
 
 	# run shell script in IIQ DB container to create IIQ DB & tables
@@ -58,6 +60,8 @@ else
 
 	# upload shell script to IIQ DB container
 	docker cp ./shell/create-iiq-db.sh iiq-db:/tmp/
+	docker exec -u 0 -it iiq-db chown root:root /tmp/create-iiq-db.sh
+	docker exec -u 0 -it iiq-db bash -c "sed -i -e 's/\r$//' /tmp/create-iiq-db.sh"
 	docker exec --workdir /tmp iiq-db chmod 755 create-iiq-db.sh
 
 	# run shell script in IIQ DB container to create IIQ DB & tables
@@ -77,11 +81,14 @@ fi
 
 # overried iiq (shell script to run iiq console) to increase JVM HEAP
 docker cp ./shell/iiq iiq-app:/usr/local/tomcat/webapps/identityiq/WEB-INF/bin/iiq
+docker exec -u 0 -it iiq-app chown root:root /usr/local/tomcat/webapps/identityiq/WEB-INF/bin/iiq
+docker exec -u 0 -it iiq-app bash -c "sed -i -e 's/\r$//' /usr/local/tomcat/webapps/identityiq/WEB-INF/bin/iiq"
 docker exec --workdir /usr/local/tomcat/webapps/identityiq/WEB-INF/bin iiq-app chmod 755 iiq
 
 docker cp ./shell/init-iiq.sh iiq-app:/tmp/
+docker exec -u 0 -it iiq-app chown root:root /tmp/init-iiq.sh
+docker exec -u 0 -it iiq-app bash -c "sed -i -e 's/\r$//' /tmp/init-iiq.sh"
 docker exec --workdir /tmp/ iiq-app chmod 755 init-iiq.sh
-
 docker exec -it iiq-app bash -c "/tmp/init-iiq.sh"
 
 echo "Deleting downloaded files: sp.init-custom.xml and create_identityiq_tables.mysql"

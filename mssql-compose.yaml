@@ -25,7 +25,7 @@ services:
 
   iiq-mssql-db:
     container_name: iiq-mssql-db
-    image: mcr.microsoft.com/mssql/server:2022-latest
+    image: mcr.microsoft.com/mssql/server:2022-CU12-ubuntu-22.04
     restart: always
     environment:
       ACCEPT_EULA: "Y"

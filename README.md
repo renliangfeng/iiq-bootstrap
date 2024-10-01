@@ -1,5 +1,5 @@
 # iiq-bootstrap
-Build IIQ from SSB compliant folder and run it in Docker Desktop rapidly. It supports MySQL and SQL Server as IIQ backed Database.
+Build IIQ from SSB compliant folder and run it in Docker Desktop rapidly. It supports MySQL, SQL Server and Oracle as IIQ backed Database.
 
 Below are the steps of kick-start.
 

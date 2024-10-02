@@ -31,7 +31,7 @@ services:
     ports:
       - 3307:3306
     environment:
-      MYSQL_ROOT_PASSWORD: Sailpoint@1234
+      MYSQL_ROOT_PASSWORD: Sailpoint_1234
       MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
     volumes:
       - ./volume/mysql/mysql-data:/var/lib/mysql

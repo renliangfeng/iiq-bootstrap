@@ -16,26 +16,25 @@ services:
       - CATALINA_OPTS=-Xmx1024m -Xms256m
       - TZ=Australia/Sydney
     depends_on:
-      - iiq-mssql-db
+      - iiq-oracle-db
     volumes:
       - "./volume/sp-log:/usr/local/tomcat/logs"
       - "./volume/keystore/local:/usr/local/keystore"
-      - "./volume/iiq-properties/local/mssql/iiq.properties:/usr/local/tomcat/webapps/identityiq/WEB-INF/classes/iiq.properties"
+      - "./volume/iiq-properties/local/oracle/iiq.properties:/usr/local/tomcat/webapps/identityiq/WEB-INF/classes/iiq.properties"
       - "./volume/iiq-properties/local/log4j2.properties:/usr/local/tomcat/webapps/identityiq/WEB-INF/classes/log4j2.properties"
 
-  iiq-mssql-db:
-    container_name: iiq-mssql-db
-    image: mcr.microsoft.com/mssql/server:2022-CU12-ubuntu-22.04
-    restart: always
+  iiq-oracle-db:
+    container_name: iiq-oracle-db
+    image: gvenzl/oracle-free
     environment:
-      ACCEPT_EULA: "Y"
-      SA_PASSWORD: Sailpoint_1234
+      - ORACLE_DATABASE=IIQDB
+      - ORACLE_PASSWORD=Sailpoint_1234
+      - APP_USER=my_user
+      - APP_USER_PASSWORD=Sailpoint_1234
     ports:
-      - 1433:1433
+      - 1521:1521
     volumes:
-      - ./volume/mssql/data:/var/opt/mssql/data
-      - ./volume/mssql/log:/var/opt/mssql/log
-      - ./volume/mssql/secrets:/var/opt/mssql/secrets
+      - ./volume/oracle/oracle-data:/opt/oracle/oradata
 
 
     

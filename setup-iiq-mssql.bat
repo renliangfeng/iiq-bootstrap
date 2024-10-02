@@ -1,7 +1,7 @@
 @echo off
 
-set "rootPassword=Sailpoint@1234"
-set /p rootPassword=Please specify password of SQL Server root user. Leave it empty and press Enter to continue with the default password 'Sailpoint@1234'. 
+set "rootPassword=Sailpoint_1234"
+set /p rootPassword=Please specify password of SQL Server root user. Leave it empty and press Enter to continue with the default password 'Sailpoint_1234'. 
 
 echo root password: %rootPassword%
 

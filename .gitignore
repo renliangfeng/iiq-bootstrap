@@ -3,6 +3,8 @@ volume/sp-log/*
 volume/app/*
 volume/mysql/mysql-data/*
 volume/mssql/data/*
+volume/mssql/log/*
+volume/mssql/secrets/*
 volume/mysql/log/*
 volume/mysql/secrets/*
 volume/oracle/oracle-data/*

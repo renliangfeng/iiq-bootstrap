@@ -41,7 +41,7 @@ if [[ $dbType = 'mssql' ]];then
 	echo "By default IIQ database name is 'identityiq'. But you can modify ${PWD}/create_identityiq_tables.sqlserver to override values before pressing Enter to continue".
 elif [[ $dbType = 'oracle' ]];then
 	docker cp iiq-app:/usr/local/tomcat/webapps/identityiq/WEB-INF/database/create_identityiq_tables.oracle .
-	echo "By default IIQ database name is 'identityiq'. But you can modify ${PWD}/create_identityiq_tables.oracle to override values before pressing Enter to continue".
+	echo "By default IIQ database name is 'identityiq'. But you can modify ${PWD}/create_identityiq_users.oracle and ${PWD}/create_identityiq_tables.oracle to override values before pressing Enter to continue".
 else
 	docker cp iiq-app:/usr/local/tomcat/webapps/identityiq/WEB-INF/database/create_identityiq_tables.mysql .
 	echo "By default IIQ database name is 'identityiq'. But you can modify ${PWD}/create_identityiq_tables.mysql to override values before pressing Enter to continue".
@@ -65,6 +65,12 @@ elif [[ $dbType = 'oracle' ]];then
 	# upload IIQ DB script to IIQ DB container
 	docker cp ./create_identityiq_users.oracle iiq-oracle-db:/tmp/
 	docker cp ./create_identityiq_tables.oracle iiq-oracle-db:/tmp/
+	## increase size of some DB table columes to prevent errors
+	docker exec -u 0 -it iiq-oracle-db bash -c "sed -i -e 's/IS_DURABLE VARCHAR2(1)/IS_DURABLE VARCHAR2(5)/g' /tmp/create_identityiq_tables.oracle"
+	docker exec -u 0 -it iiq-oracle-db bash -c "sed -i -e 's/IS_NONCONCURRENT VARCHAR2(1)/IS_NONCONCURRENT VARCHAR2(5)/g' /tmp/create_identityiq_tables.oracle"
+	docker exec -u 0 -it iiq-oracle-db bash -c "sed -i -e 's/IS_UPDATE_DATA VARCHAR2(1)/IS_UPDATE_DATA VARCHAR2(5)/g' /tmp/create_identityiq_tables.oracle"
+	docker exec -u 0 -it iiq-oracle-db bash -c "sed -i -e 's/REQUESTS_RECOVERY VARCHAR2(1)/REQUESTS_RECOVERY VARCHAR2(5)/g' /tmp/create_identityiq_tables.oracle"
+
 
 	# upload shell script to IIQ DB container
 	docker cp ./shell/create-iiq-db-oracle.sh iiq-oracle-db:/tmp/

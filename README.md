@@ -22,6 +22,8 @@ Or add it to the front of '*docker compose up*' command as below:
 
 `COMPOSE_FILE=mssql-compose.yaml ssb_app_folder=[[appFolder]] sp_target=[[envValue]] docker compose up`
 
+Alternately, you can define all the parameters (`ssb_app_folder`, `sp_target` and `COMPOSE_FILE`) in **.env** file, then simply run `docker compose up` command.
+
 ## step 3: install and initialize database
 Run command from *iiq-bootstrap* directory:
 ### Mac (Linux) OS

@@ -24,7 +24,7 @@ Or add it to the front of '*docker compose up*' command as below:
 
 Alternately, you can define all the parameters (`ssb_app_folder`, `sp_target` and `COMPOSE_FILE`) in **.env** file, then simply run `docker compose up` command.
 
-If you get the following error the first time running command `docker compose up`, you may need to disable your VPN temporily. You can enable VPN after the first successful run.
+If you get the following error the first time running command `docker compose up`, you may need to disable your VPN temporily. You can enable VPN back once IIQ docker image is built successfully.
 
 <img width="975" height="181" alt="image" src="https://github.com/user-attachments/assets/283e202f-6097-4526-aa74-0c96d2d921b2" />
 

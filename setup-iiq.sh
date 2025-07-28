@@ -38,6 +38,7 @@ if [[ $dbType = 'mssql' ]];then
 	docker cp iiq-app:/usr/local/tomcat/webapps/identityiq/WEB-INF/database/create_identityiq_tables.sqlserver .
 	sed -i '' "s/WITH PASSWORD='identityiq'/WITH PASSWORD='identityiq',CHECK_POLICY = OFF/g" ./create_identityiq_tables.sqlserver
 	sed -i '' "s/WITH PASSWORD='identityiqPlugin'/WITH PASSWORD='identityiqPlugin',CHECK_POLICY = OFF/g" ./create_identityiq_tables.sqlserver
+ 	sed -i '' "s/WITH PASSWORD='identityiqah'/WITH PASSWORD='identityiqah',CHECK_POLICY = OFF/g" ./create_identityiq_tables.sqlserver
 	echo "By default IIQ database name is 'identityiq'. But you can modify ${PWD}/create_identityiq_tables.sqlserver to override values before pressing Enter to continue".
 elif [[ $dbType = 'oracle' ]];then
 	docker cp iiq-app:/usr/local/tomcat/webapps/identityiq/WEB-INF/database/create_identityiq_tables.oracle .

@@ -24,6 +24,12 @@ Or add it to the front of '*docker compose up*' command as below:
 
 Alternately, you can define all the parameters (`ssb_app_folder`, `sp_target` and `COMPOSE_FILE`) in **.env** file, then simply run `docker compose up` command.
 
+If you are running IIQ with MySQL in linux, you need to update compose.yaml file to replace one line with following (setting "lower-case-table-names" as "1"):
+
+
+ 	command: mysqld --default-authentication-plugin=mysql_native_password --lower-case-table-names=1 --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    
+
 If you get the following error the first time running command `docker compose up`, you may need to disable your VPN temporily. You can enable VPN back once IIQ docker image is built successfully.
 
 <img width="975" height="181" alt="image" src="https://github.com/user-attachments/assets/283e202f-6097-4526-aa74-0c96d2d921b2" />

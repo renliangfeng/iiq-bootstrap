@@ -4,6 +4,7 @@ echo "Checking current running DB container. "
 mysqlContainer="$(docker ps --format '{{ .Names }}' | grep iiq-db)"
 mssqlContainer="$(docker ps --format '{{ .Names }}' | grep iiq-mssql-db)"
 oracleContainer="$(docker ps --format '{{ .Names }}' | grep iiq-oracle-db)"
+psqlContainer="$(docker ps --format '{{ .Names }}' | grep iiq-psql-db)"
 if [[ $mysqlContainer = 'iiq-db' ]];then
 	echo "Running DB is MySQL. "
 	dbType=mysql
@@ -13,6 +14,9 @@ elif [[ "$mssqlContainer" == "iiq-mssql-db" ]]; then
 elif [[ "$oracleContainer" == "iiq-oracle-db" ]]; then
 	echo "Running DB is Oracle. "
 	dbType=oracle
+elif [[ "$psqlContainer" == "iiq-psql-db" ]]; then
+	echo "Running DB is PostgreSQL. "
+	dbType=psql
 else
 	echo "No Running DB (MySQL or SQL Server). Exit "
 	exit
@@ -43,6 +47,9 @@ if [[ $dbType = 'mssql' ]];then
 elif [[ $dbType = 'oracle' ]];then
 	docker cp iiq-app:/usr/local/tomcat/webapps/identityiq/WEB-INF/database/create_identityiq_tables.oracle .
 	echo "By default IIQ database name is 'identityiq'. But you can modify ${PWD}/create_identityiq_users.oracle and ${PWD}/create_identityiq_tables.oracle to override values before pressing Enter to continue".
+elif [[ $dbType = 'psql' ]];then
+	docker cp iiq-app:/usr/local/tomcat/webapps/identityiq/WEB-INF/database/create_identityiq_tables.postgresql .
+	echo "By default IIQ database name is 'identityiq'. But you can modify ${PWD}/create_identityiq_users.postgresql and ${PWD}/create_identityiq_tables.postgresql to override values before pressing Enter to continue".
 else
 	docker cp iiq-app:/usr/local/tomcat/webapps/identityiq/WEB-INF/database/create_identityiq_tables.mysql .
 	echo "By default IIQ database name is 'identityiq'. But you can modify ${PWD}/create_identityiq_tables.mysql to override values before pressing Enter to continue".
@@ -81,7 +88,18 @@ elif [[ $dbType = 'oracle' ]];then
 
 	# run shell script in IIQ DB container to create IIQ DB & tables
 	docker exec -it iiq-oracle-db sh -c "/tmp/create-iiq-db-oracle.sh $rootPassword"
+elif [[ $dbType = 'psql' ]];then
+	# upload IIQ DB script to IIQ DB container
+	docker cp ./create_identityiq_tables.postgresql iiq-psql-db:/tmp/
 
+	# upload shell script to IIQ DB container
+	docker cp ./shell/create-iiq-db-psql.sh iiq-psql-db:/tmp/
+	docker exec -u 0 -it iiq-psql-db chown root:root /tmp/create-iiq-db-psql.sh
+	docker exec -u 0 -it iiq-psql-db bash -c "sed -i -e 's/\r$//' /tmp/create-iiq-db-psql.sh"
+	docker exec -u 0 --workdir /tmp iiq-psql-db chmod 755 create-iiq-db-psql.sh
+
+	# run shell script in IIQ DB container to create IIQ DB & tables
+	docker exec -it iiq-psql-db sh -c "/tmp/create-iiq-db-psql.sh $rootPassword"
 else
 	# upload IIQ DB script to IIQ DB container
 	docker cp ./create_identityiq_tables.mysql iiq-db:/tmp/

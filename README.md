@@ -1,5 +1,5 @@
 # iiq-bootstrap
-Build IIQ from SSB compliant folder and run it in Docker Desktop rapidly. It supports MySQL, SQL Server and Oracle as IIQ backed Database.
+Build IIQ from SSB compliant folder and run it in Docker Desktop rapidly. It supports MySQL, SQL Server, Oracle, PostgreSQL as IIQ backed Database.
 
 Below are the steps of kick-start.
 
@@ -17,6 +17,10 @@ Notes: To run SQL Server or Oracle as IIQ Database, update **.env** file (hidden
 or
 
 `COMPOSE_FILE=oracle-compose.yaml`
+
+or
+
+`COMPOSE_FILE=psql-compose.yaml`
 
 Or add it to the front of '*docker compose up*' command as below:
 
@@ -46,9 +50,11 @@ Run command from *iiq-bootstrap* directory:
 `setup-iiq-mssql.bat`
 ### Windows OS and Oracle DB
 `setup-iiq-oracle.bat`
+### Windows OS and PostgreSQL DB
+TODO - will be supported in the future.
 
 ***Additional Notes:*** 
-- *Unlike Window Batch, there is only one Shell script for Mac or Linux as it automatically detects the type (MySQL or SQL Server or Oracle) of running Database for IIQ.*
+- *Unlike Window Batch, there is only one Shell script for Mac or Linux as it automatically detects the type (MySQL or SQL Server or Oracle or PostgreSQL) of running Database for IIQ.*
 - *By default, it will install LCM and RapidSetup XML Objects. If you want to skip them, you need to modify the following shell script to remove the section related to LCM or RapidSetup XML import*:
   
 		iiq-bootstrap/shell/init-iiq.sh
@@ -68,6 +74,7 @@ Installing IIQ is usually an one-off effort. However if you need to start over a
 	- **MySQL**: iiq-bootstrap/volume/mysql/mysql-data 
 	- **SQL Server**: iiq-bootstrap/volume/mssql/data
 	- **Oracle**: iiq-bootstrap/volume/oracle/oracle-data
+	- **PostgreSQL**: **make sure you delete the whole folder** (iiq-bootstrap/volume/psql), otherwise Docker Desktop will fail to create PostgreSQL container instance.
 
 - Delete Container instances group **iiq-bootstrap** from Docker Desktop. This will delete both Container instances under group **iiq-bootstrap**.
 - If you switch to a different IIQ application, delete **iiq-app** image from Docker Desktop.

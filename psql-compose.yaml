@@ -1,0 +1,40 @@
+services:
+  iiq-app:
+    image: iiq-app
+    build: 
+      context: ./iiq_app
+      args:
+        - SSB_APP_FOLDER=$ssb_app_folder
+        - SPTARGET=$sp_target
+        - FULL_TEXT_INDEX_PATH=/mnt/iiq-fulltext-index
+        - UPLOAD_FILE_PATH=/mnt/file-upload
+    container_name: iiq-app
+    ports:
+      - 8080:8080
+      - 8443:8443
+    environment:
+      - CATALINA_OPTS=-Xmx1024m -Xms256m
+      - TZ=Australia/Sydney
+    depends_on:
+      - iiq-psql-db
+    volumes:
+      - "./volume/sp-log:/usr/local/tomcat/logs"
+      - "./volume/keystore/local:/usr/local/keystore"
+      - "./volume/iiq-properties/local/psql/iiq.properties:/usr/local/tomcat/webapps/identityiq/WEB-INF/classes/iiq.properties"
+      - "./volume/iiq-properties/local/log4j2.properties:/usr/local/tomcat/webapps/identityiq/WEB-INF/classes/log4j2.properties"
+  
+  iiq-psql-db:
+    container_name: iiq-psql-db
+    # IIQ 8.4 supports PostgreSQL 15
+    #image: postgres:15
+    # IIQ 8.5 supports PostgreSQL 16,17
+    image: postgres:17
+    restart: always
+    environment:
+      POSTGRES_DB: iiqdb      
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Sailpoint_1234
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./volume/psql:/var/lib/postgresql/data

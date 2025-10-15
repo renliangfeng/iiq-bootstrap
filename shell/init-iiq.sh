@@ -16,11 +16,11 @@ then
 	echo "Complete import init-lcm.xml"
 fi
 
-if [ -e ../config/init-rapidsetup.xml ]
+if [ -e ../config/rapidsetup.xml ]
 then
-    echo "Start to import init-rapidsetup.xml"
-	echo "import init-rapidsetup.xml" >> import-rapidsetup.txt
+    echo "Start to import rapidsetup.xml"
+	echo "import rapidsetup.xml" >> import-rapidsetup.txt
 	./iiq console < import-rapidsetup.txt
 	rm import-rapidsetup.txt
-	echo "Complete import init-rapidsetup.xml"
+	echo "Complete import rapidsetup.xml"
 fi

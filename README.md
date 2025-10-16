@@ -51,7 +51,7 @@ Run command from *iiq-bootstrap* directory:
 ### Windows OS and Oracle DB
 `setup-iiq-oracle.bat`
 ### Windows OS and PostgreSQL DB
-TODO - will be supported in the future.
+`setup-iiq-psql.bat`
 
 ***Additional Notes:*** 
 - *Unlike Window Batch, there is only one Shell script for Mac or Linux as it automatically detects the type (MySQL or SQL Server or Oracle or PostgreSQL) of running Database for IIQ.*

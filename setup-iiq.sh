@@ -144,6 +144,8 @@ if [[ $dbType = 'mssql' ]];then
 	rm ./create_identityiq_tables.sqlserver
 elif [[ $dbType = 'oracle' ]];then
 	rm ./create_identityiq_tables.oracle
+elif [[ $dbType = 'psql' ]];then
+	rm ./create_identityiq_tables.postgresql
 else
 	rm ./create_identityiq_tables.mysql
 fi
